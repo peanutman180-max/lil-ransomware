@@ -142,5 +142,5 @@ def on_alt_f4(event):
 # Attach the blockers to the root window
 root.bind('<Alt-F4>', on_alt_f4)
 root.protocol("WM_DELETE_WINDOW", on_close_attempt)
-#
 
+root.mainloop()
