@@ -110,37 +110,27 @@ def limit_length(*args):
 
 var = tk.StringVar()
 var.trace_add("write", limit_length)
-entry_box.config(textvariable=var)
-
-# Result label for password feedback
-result_label = tk.Label(
-    root,
-    text="",
-    font=("Arial", 14),
-    fg="white",
-    bg="black"
-)
-result_label.place(relx=0.5, rely=0.85, anchor="center")
-
+entry_box.config(textvariable=var)   
 # 1. Set your secret password here
-SECRET_PASSWORD = "63902"  # Change this to any 5-digit code you want
+SECRET_PASSWORD = "71184"
+
+# 2. Create the result label BEFORE the function uses it
+result_label = tk.Label(root, text="", font=("Arial", 10))
+result_label.pack()
 
 def check_password():
-    user_input = entry_box.get()  # Get text from your white box
+    user_input = entry_box.get()
     
     if user_input == SECRET_PASSWORD:
-        # Action for correct password
         result_label.config(text="Access Granted!", fg="green")
-        # Add code here to open the next window or show content
     else:
-        # Action for wrong password
         result_label.config(text="Wrong Code. Try again.", fg="red")
-        entry_box.delete(0, tk.END) # Clears the box so they can type again
+        entry_box.delete(0, tk.END)
 
-# Make sure your button calls this new function:
-# tk.Button(root, text="Submit", command=check_password).pack()   
+# 3. Activate the button (removed the #)
+tk.Button(root, text="Submit", command=check_password).pack()
 
-#start of blocker stuff frfr
+# start of blocker stuff frfr (Ensure this is not indented inside the function)   
 def on_close_attempt():
     # Does nothing, effectively blocking the close
     pass
