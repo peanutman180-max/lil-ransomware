@@ -123,9 +123,10 @@ def check_password():
     
     if user_input == SECRET_PASSWORD:
         result_label.config(text="Access Granted!", fg="green")
+        root.destroy()  # This closes the window and ends the program immediately
     else:
         result_label.config(text="Wrong Code. Try again.", fg="red")
-        entry_box.delete(0, tk.END)
+        entry_box.delete(0, tk.END)   
 
 # 3. Activate the button (removed the #)
 tk.Button(root, text="Submit", command=check_password).pack()
