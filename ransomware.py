@@ -82,6 +82,35 @@ text_label = tk.Label(
     bg="black"
 )
 text_label.place(relx=0.5, rely=0.75, anchor="center")
+# Assuming 'root' is your main window and 'label' is your existing text widget
+
+# 1. Create the white entry box
+entry_box = tk.Entry(
+    root,
+    bg="white",           # Forces white background
+    fg="black",           # Black text
+    width=30,             # Adjust width as needed
+    font=("Arial", 12),   # Match font to your style
+    justify="center"      # Centers text in the box
+)
+entry_box.pack(pady=(0, 10)) # Adds space below the box
+
+# 2. (Optional) Restrict to 5 digits if you still need that constraint
+def validate_digit(char):
+    return char.isdigit() or char == ""
+
+reg = root.register(validate_digit)
+entry_box.config(validate="key", validatecommand=(reg, '%S'))
+
+# Enforce 5 character limit
+def limit_length(*args):
+    val = entry_box.get()
+    if len(val) > 5:
+        entry_box.delete(5, tk.END)
+
+var = tk.StringVar()
+var.trace_add("write", limit_length)
+entry_box.config(textvariable=var)   
 
 #start of blocker stuff frfr
 def on_close_attempt():
@@ -98,31 +127,3 @@ root.protocol("WM_DELETE_WINDOW", on_close_attempt)
 #
 
 root.mainloop()   
-# 1. Define the validation function (allows only digits)
-def validate_digit(char):
-    return char.isdigit() or char == ""
-
-# 2. Create the white text box
-# Replace 'root' with your actual window variable (e.g., self, window, app)
-reg = root.register(validate_digit)
-
-code_entry = tk.Entry(
-    root,
-    bg="white",             # Makes the box white
-    fg="black",             # Text color
-    width=10,               # Width of the box
-    validate="key",         # Validate on every keystroke
-    validatecommand=(reg, '%S') # Only allow digits
-)
-code_entry.pack(pady=10)    # Or use .grid() / .place() depending on your layout
-
-# 3. Enforce exactly 5 characters limit
-def limit_length(*args):
-    val = code_entry.get()
-    if len(val) > 5:
-        code_entry.delete(5, tk.END)
-
-# Attach the limit logic
-code_entry_var = tk.StringVar()
-code_entry_var.trace_add("write", limit_length)
-code_entry.config(textvariable=code_entry_var)   
