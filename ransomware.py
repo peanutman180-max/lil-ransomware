@@ -98,48 +98,31 @@ root.protocol("WM_DELETE_WINDOW", on_close_attempt)
 #
 
 root.mainloop()   
+# 1. Define the validation function (allows only digits)
 def validate_digit(char):
-    # Allow only digits
     return char.isdigit() or char == ""
 
-def main():
-    root = tk.Tk()
-    root.title("5-Digit Code Input")
-    root.geometry("300x150")
+# 2. Create the white text box
+# Replace 'root' with your actual window variable (e.g., self, window, app)
+reg = root.register(validate_digit)
 
-    # Register the validation function
-    reg = root.register(validate_digit)
+code_entry = tk.Entry(
+    root,
+    bg="white",             # Makes the box white
+    fg="black",             # Text color
+    width=10,               # Width of the box
+    validate="key",         # Validate on every keystroke
+    validatecommand=(reg, '%S') # Only allow digits
+)
+code_entry.pack(pady=10)    # Or use .grid() / .place() depending on your layout
 
-    tk.Label(root, text="Enter 5-digit code:", font=("Arial", 12)).pack(pady=10)
+# 3. Enforce exactly 5 characters limit
+def limit_length(*args):
+    val = code_entry.get()
+    if len(val) > 5:
+        code_entry.delete(5, tk.END)
 
-    # Entry widget with validation:
-    # validate="key" checks on every keystroke
-    # validatecommand=(reg, '%S') passes only the character being typed
-    entry = tk.Entry(root, validate="key", validatecommand=(reg, '%S'), width=20)
-    entry.pack(pady=5)
-
-    # Optional: Enforce max length of 5 using trace
-    def limit_length(*args):
-        value = entry.get()
-        if len(value) > 5:
-            entry.delete(5, tk.END)
-
-    entry_var = tk.StringVar()
-    entry_var.trace_add("write", limit_length)
-    entry.config(textvariable=entry_var)
-
-    def submit():
-        code = entry.get()
-        if len(code) == 5:
-            result_label.config(text=f"Code submitted: {code}", fg="green")
-        else:
-            result_label.config(text="Please enter exactly 5 digits.", fg="red")
-
-    tk.Button(root, text="Submit", command=submit).pack(pady=10)
-    result_label = tk.Label(root, text="", font=("Arial", 10))
-    result_label.pack()
-
-    root.mainloop()
-
-if __name__ == "__main__":
-    main()
+# Attach the limit logic
+code_entry_var = tk.StringVar()
+code_entry_var.trace_add("write", limit_length)
+code_entry.config(textvariable=code_entry_var)   
